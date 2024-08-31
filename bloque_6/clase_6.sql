@@ -8,8 +8,12 @@ CREATE TABLE `products`(
     nombre_producto		VARCHAR(100) DEFAULT 'producto x',
     precio 				FLOAT(10,2) DEFAULT 100.00,
 	`nombre-cliente` 	VARCHAR(200) DEFAULT 'cliente x',
+    -- status				BOOL DEFAULT TRUE ,
     PRIMARY KEY (id_producto)
 );
+
+
+
 
 
 -- DML INSERT 
@@ -24,8 +28,21 @@ INSERT INTO tbl_name (a,b,c)
 
 TRUNCATE TABLE `kmart`.`products` ;
 
-SELECT *
-FROM `kmart`.`products` ;
+SELECT 
+	id_producto		
+,    nombre_producto	
+,    precio 	
+,	`nombre-cliente` 
+FROM `kmart`.`products` 
+-- WHERE status = FALSE
+;
+ /*
+-- UPDATE LOGICO
+UPDATE `kmart`.`products`
+SET status = FALSE
+	WHERE id_producto = 100;
+*/
+
 
 INSERT INTO `kmart`.`products` 
 (
@@ -186,3 +203,67 @@ INSERT INTO `kmart`.`products`
 ('Frangelico', 24.39, 'Podcat'),
 ('Water - Green Tea Refresher', 73.03, 'Roomm'),
 ('Chocolate - Dark Callets', 91.01, 'Miboo');
+
+
+-- UPDATE 
+SELECT *
+FROM `kmart`.`products` AS p
+WHERE 
+	p.precio <= 10
+ORDER BY p.precio
+;
+
+/*
+UPDATE t1 
+	SET col1 = col1 + 1;
+*/
+
+UPDATE `kmart`.`products` AS p
+	SET p.precio = 15
+	WHERE
+		p.precio <= 10;
+
+-- VARIABLE DE SETEO DE OFF DE LA ACTUALIZACION MASIVA
+SET SQL_SAFE_UPDATES = 0; -- POR SESSION
+
+UPDATE `kmart`.`products` AS p
+	SET p.precio = 15
+	WHERE
+		p.precio <= 10;
+
+SELECT *
+FROM `kmart`.`products` AS p
+ORDER BY p.precio;
+
+
+-- Quiero que un cliente con sus compras se actualice sumandole un 10%
+-- UPDATE POR MEDIO DE SUBQUERIES
+SELECT 
+	p.`nombre-cliente` 
+,	COUNT(1) AS 'Total de productos'
+FROM `kmart`.`products` AS p
+GROUP BY p.`nombre-cliente` 
+ORDER BY COUNT(1) DESC ;
+
+
+-- cliente --> 'Skinte'
+
+UPDATE `kmart`.`products` AS p
+	SET p.precio = p.precio + (p.precio * 0.10)
+	WHERE p.`nombre-cliente` LIKE "Skinte";
+
+SELECT * 
+FROM `kmart`.`products` AS p
+	WHERE p.`nombre-cliente` LIKE "Skinte";
+    
+    
+-- DELETE
+
+DELETE FROM 
+	`kmart`.`products` AS p
+    WHERE p.`nombre-cliente` LIKE "Skinte";
+    
+
+DELETE FROM 
+	`kmart`.`products` ;
+
