@@ -130,7 +130,7 @@ LOAD    DATA LOCAL INFILE './clientes.csv'
             IGNORE 1 ROWS
 
 -- --- 
-
+-- ingesta_pais.sql
 USE mondo;
 
 SET GLOBAL local_infile = TRUE;
