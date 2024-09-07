@@ -1,0 +1,21 @@
+id_ciudad,nombre,poblacion,id_pais
+0,Bogotá,7743955,1
+1,Medellín,2569000,1
+2,Cali,2227928,1
+3,Lima,9674755,2
+4,Arequipa,1011201,2
+5,Trujillo,968000,2
+6,Santiago,6158080,3
+7,Valparaíso,296655,3
+8,Concepción,1017545,3
+9,Montevideo,1719453,4
+10,Salto,104028,4
+11,Paysandú,76000,4
+12,Ciudad de México,9209944,5
+13,Guadalajara,1460148,5
+14,Monterrey,1135512,5
+15,Cúcuta,721398,1
+16,Iquitos,471993,2
+17,Viña del Mar,331399,3
+18,Durazno,34000,4
+19,Puebla,1698276,5

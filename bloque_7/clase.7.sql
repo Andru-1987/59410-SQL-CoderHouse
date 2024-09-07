@@ -103,7 +103,7 @@ Es importante tener en cuenta que el uso de `LOAD DATA LOCAL INFILE` puede plant
 -- When running the mysql command to connect to the MySQL server, you need to include the --local-infile=1 option to enable local file loading:
 
 
-mysql -u username -p --local-infile=1
+DESDE TERMINAL ==> mysql -u username -p --host 127.0.0.1 --port 3306 --local-infile=1
 
 SET GLOBAL local_infile = true;
 -- verificar que este activado desde server y client side
@@ -128,3 +128,29 @@ LOAD    DATA LOCAL INFILE './clientes.csv'
             FIELDS TERMINATED   BY ',' 
             LINES TERMINATED    BY '\n' 
             IGNORE 1 ROWS
+
+-- --- 
+
+USE mondo;
+
+SET GLOBAL local_infile = TRUE;
+SHOW GLOBAL VARIABLES LIKE 'local_infile';
+
+LOAD DATA LOCAL INFILE 'pais.csv' 
+INTO TABLE mondo.pais
+FIELDS TERMINATED BY ',' 
+-- ENCLOSED BY '"' 
+-- LINES TERMINATED BY '\r\n' -- si estas en linux si no '\r\n'
+LINES TERMINATED BY  '\n'
+IGNORE 1 ROWS
+-- (nombre,moneda,idioma)
+;
+
+
+LOAD DATA LOCAL INFILE 'ciudad.csv' 
+INTO TABLE mondo.ciudad
+FIELDS TERMINATED BY ',' 
+-- ENCLOSED BY '"' 
+LINES TERMINATED BY '\r\n' -- si estas en linux si no '\r\n'
+IGNORE 1 ROWS
+(nombre,poblacion,id_pais);
