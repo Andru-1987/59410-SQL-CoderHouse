@@ -100,3 +100,46 @@ DELIMITER ;
 
 SELECT fn_total_vehiculos(1) -- ARGUMENTO
 FROM DUAL;
+
+
+-- FUNCTION IMPROVED 
+
+ DELIMITER //
+ 
+ CREATE FUNCTION nautilus.fn_total_vehiculos(cliente INT)
+	RETURNS INT
+    COMMENT 'parametro (cliente): DATATYPE( INT )  CARACTERISTICA : [READ SQL DATA] -> valor  de RETURNS INT'
+--   characteristic
+	READS SQL DATA
+BEGIN
+	-- variables de un proceso
+	DECLARE existe BOOL;
+    DECLARE valor_retorno INT;
+    
+	-- SETEO LA EXISTENCIA
+	SET existe = (SELECT 
+						IF(COUNT(id_cliente) = 0 , FALSE,TRUE)
+					FROM nautilus.CLIENTE
+                    WHERE id_cliente = cliente
+                    );
+	
+    -- TOMO LA DECISION
+    IF existe THEN
+		SELECT 
+			COUNT(id_vehiculo) INTO valor_retorno
+		FROM nautilus.TRANSACCION 
+			WHERE 
+				id_cliente = cliente 
+		GROUP BY id_cliente;
+		RETURN valor_retorno;
+    ELSE 
+     -- 45000  --> externo
+     -- 01000 --> interno
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT  = 'NO EXISTE EL CLIENTE', MYSQL_ERRNO = 1000;
+        RETURN NULL;
+    END IF ;
+END //
+
+DELIMITER ;
+
+
