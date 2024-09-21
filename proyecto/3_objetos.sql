@@ -140,15 +140,84 @@ CREATE FUNCTION
 DELIMITER ;
     
 SELECT fn_dias_taller(20) FROM DUAL;
+
+
+-- pasos 
+-- IN id_vehiculo INT -> vehiculo VARCHAR(200)
+
+SELECT 
+modelo
+FROM nautilus.VEHICULO
+WHERE id_vehiculo = 2;
+
+DROP FUNCTION IF EXISTS fn_busqueda_vehiculo ;
+
+DELIMITER //
+CREATE FUNCTION fn_busqueda_vehiculo(vehiculo INT)
+RETURNS VARCHAR(200)
+READS SQL DATA
+BEGIN
+	DECLARE valor_retorno VARCHAR(200);
+
+	SELECT 
+		modelo INTO valor_retorno
+	FROM nautilus.VEHICULO
+	WHERE id_vehiculo = vehiculo;
     
+    RETURN valor_retorno;
+
+END //
+DELIMITER ;
+
+SELECT fn_busqueda_vehiculo(2) FROM DUAL;
+
 -- 2 	procedures -> 
 	-- * procedimientos de modelo de negocio 
 	-- * procedimiento de limpieza de registros 
 	-- * procedimiento de manejo de data agrupada
+
+
+CREATE TABLE riesgo_vehiculo_taller(
+	id  INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+    id_vehiculo INT ,
+    dias_en_taller INT
+);
+	
+
+DROP PROCEDURE IF EXISTS sp_moviento_vehiculo_prioridad;
+-- SI EL VEHICULO TIENE > 5 dias -> entonces movelo a la tabla de riesgo
+DELIMITER //
+CREATE PROCEDURE sp_moviento_vehiculo_prioridad(
+	IN vehiculo INT
+)
+BEGIN
+	DECLARE cant_dias INT;
+	SELECT fn_dias_taller(vehiculo) INTO cant_dias FROM DUAL;
+	
+    IF cant_dias > 5 THEN
+		INSERT INTO riesgo_vehiculo_taller
+        (id_vehiculo,dias_en_taller)
+        VALUES(vehiculo,cant_dias);
+		
+        UPDATE TALLER_VEHICULO
+			SET fecha_reparacion = NOw()
+            WHERE
+				id_vehiculo = vehiculo;
+       
+        SELECT 'SE HA INGRESADO EN LA TABLA DE RIESGO' AS msg FROM DUAL;
+	END IF ;
+
+END //
+
+DELIMITER ;
+
+
+CALL sp_moviento_vehiculo_prioridad(2);
+
     
-    
-    
-    
+SELECT * FROM  riesgo_vehiculo_taller;
+SELECT * FROM  TALLER_VEHICULO WHERE id_vehiculo = 2;
+
 -- 2 	triggers
 	-- * trigger de validacion
     -- * trigger de log | auditoria
