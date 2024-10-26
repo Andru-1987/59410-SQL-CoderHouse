@@ -1,0 +1,18 @@
+services:
+
+  mysql:
+    image: mysql
+    restart: always
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: coderhouse
+    ports:
+      - 3306:3306
+    volumes:
+      - ./pagos.sql:/pagos.sql
+  
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
